@@ -1,34 +1,31 @@
+import { useEffect, useState } from "react"
 import styled from "styled-components"
+import axios from "axios"
 
 export default function SessionsPage() {
+    const [sessoes, setSessoes] = useState([])
+    const sessao = "https://mock-api.driven.com.br/api/v8/cineflex/movies/ID_DO_FILME/showtimes"
+
+    useEffect(() => {
+        const promise = axios.get(sessao)
+
+        promise.then((res) => {setSessoes(res.data)})
+        promise.catch((err) => {console.log(err.data)})
+    })
 
     return (
         <PageContainer>
             Selecione o horário
             <div>
-                <SessionContainer>
-                    Sexta - 03/03/2023
-                    <ButtonsContainer>
-                        <button>14:00</button>
-                        <button>15:00</button>
-                    </ButtonsContainer>
-                </SessionContainer>
-
-                <SessionContainer>
-                    Sexta - 03/03/2023
-                    <ButtonsContainer>
-                        <button>14:00</button>
-                        <button>15:00</button>
-                    </ButtonsContainer>
-                </SessionContainer>
-
-                <SessionContainer>
-                    Sexta - 03/03/2023
-                    <ButtonsContainer>
-                        <button>14:00</button>
-                        <button>15:00</button>
-                    </ButtonsContainer>
-                </SessionContainer>
+                {sessoes.map((session) =>           
+                    <SessionContainer data-test="movie-day" key={session.id}>
+                        {session.weekday} - {session.date}
+                        <ButtonsContainer key={session.showtimwes}>
+                            <button data-test="showtime">{session.name}</button>
+                            <button data-test="showtime">{session.name}</button>
+                        </ButtonsContainer>
+                    </SessionContainer>
+                )}
             </div>
 
             <FooterContainer>
