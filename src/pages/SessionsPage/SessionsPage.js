@@ -1,44 +1,54 @@
 import { useEffect, useState } from "react"
 import styled from "styled-components"
 import axios from "axios"
+import { Link, useParams } from "react-router-dom"
 
 export default function SessionsPage() {
-    const [sessoes, setSessoes] = useState([])
-    const sessao = "https://mock-api.driven.com.br/api/v8/cineflex/movies/ID_DO_FILME/showtimes"
+    const {idFilme} = useParams() 
+    const [sessoes, setSessoes] = useState()
+    const URL = `https://mock-api.driven.com.br/api/v8/cineflex/movies/${idFilme}/showtimes/`
 
     useEffect(() => {
-        const promise = axios.get(sessao)
+        const promise = axios.get(URL)
 
-        promise.then((res) => {setSessoes(res.data)})
-        promise.catch((err) => {console.log(err.data)})
-    })
+        promise.then((res) => {
+            setSessoes(res.data)
+        })
+        promise.catch((err) => {console.log(err.response.data)})
+    }, [])
 
-    return (
-        <PageContainer>
-            Selecione o horário
-            <div>
-                {sessoes.map((session) =>           
+    
+    if(sessoes) {
+        
+        return (
+            <PageContainer>
+                Selecione o horário
+                
+                {sessoes.days.map((session) =>           
                     <SessionContainer data-test="movie-day" key={session.id}>
-                        {session.weekday} - {session.date}
-                        <ButtonsContainer key={session.showtimwes}>
-                            <button data-test="showtime">{session.name}</button>
-                            <button data-test="showtime">{session.name}</button>
+                        {`${session.weekday} - ${session.date}`}
+                        <ButtonsContainer key={session.releaseDate}>
+                            {session.showtimes.map((time) => 
+                                <Link to={`../assentos/${time.id}`}>
+                                    <button data-test="showtime" key={time.id}>{time.name}</button>
+                                </Link>
+                            )}
                         </ButtonsContainer>
                     </SessionContainer>
                 )}
-            </div>
-
-            <FooterContainer>
-                <div>
-                    <img src={"https://br.web.img2.acsta.net/pictures/22/05/16/17/59/5165498.jpg"} alt="poster" />
-                </div>
-                <div>
-                    <p>Tudo em todo lugar ao mesmo tempo</p>
-                </div>
-            </FooterContainer>
-
-        </PageContainer>
-    )
+        
+                <FooterContainer data-test="footer">
+                    <div>
+                        <img src={"https://br.web.img2.acsta.net/pictures/22/05/16/17/59/5165498.jpg"} alt="poster" />
+                    </div>
+                    <div>
+                        <p>Tudo em todo lugar ao mesmo tempo</p>
+                    </div>
+                </FooterContainer>   
+            </PageContainer>
+        )
+    }
+   
 }
 
 const PageContainer = styled.div`

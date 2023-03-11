@@ -1,6 +1,22 @@
+import axios from "axios"
+import { useEffect, useState } from "react"
+import { useParams } from "react-router-dom"
 import styled from "styled-components"
 
 export default function SeatsPage() {
+    const {idSessao} = useParams()
+    const [assento, setAssento] = useState()
+    const URL = `https://mock-api.driven.com.br/api/v8/cineflex/showtimes/${idSessao}/seats`
+
+    useEffect(() => {
+        const promise = axios.get(URL)
+
+        promise.then((res) => {
+            setAssento(res.data)
+        })
+        promise.catch((err) => {console.log(err.response.data)})
+    }, [])
+
 
     return (
         <PageContainer>
