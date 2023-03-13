@@ -1,72 +1,79 @@
 import axios from "axios"
 import { useEffect, useState } from "react"
-import { useParams } from "react-router-dom"
+import { Link, useParams } from "react-router-dom"
 import styled from "styled-components"
+import Seat from "../../components/Seat"
 
 export default function SeatsPage() {
     const {idSessao} = useParams()
-    const [assento, setAssento] = useState()
+    const [sessao, setSessao] = useState()
     const URL = `https://mock-api.driven.com.br/api/v8/cineflex/showtimes/${idSessao}/seats`
 
     useEffect(() => {
         const promise = axios.get(URL)
 
         promise.then((res) => {
-            setAssento(res.data)
+            console.log(res.data)
+            setSessao(res.data)
         })
         promise.catch((err) => {console.log(err.response.data)})
     }, [])
 
+    function chooseSeat() {
 
-    return (
-        <PageContainer>
-            Selecione o(s) assento(s)
+    }
 
-            <SeatsContainer>
-                <SeatItem>01</SeatItem>
-                <SeatItem>02</SeatItem>
-                <SeatItem>03</SeatItem>
-                <SeatItem>04</SeatItem>
-                <SeatItem>05</SeatItem>
-            </SeatsContainer>
+    if(sessao) {
+        return (
+            <PageContainer>
+                Selecione o(s) assento(s)
 
-            <CaptionContainer>
-                <CaptionItem>
-                    <CaptionCircle />
-                    Selecionado
-                </CaptionItem>
-                <CaptionItem>
-                    <CaptionCircle />
-                    Disponível
-                </CaptionItem>
-                <CaptionItem>
-                    <CaptionCircle />
-                    Indisponível
-                </CaptionItem>
-            </CaptionContainer>
+                <SeatsContainer>
+                    {sessao.seats.map((seat) => 
+                        <Seat data-test="seat" key={seat.id} available={seat.isAvailable} onClick={(ev) => seat.isAvailable ? chooseSeat(ev) : null}>{seat.name}</Seat> 
+                    )}
+                </SeatsContainer>
 
-            <FormContainer>
-                Nome do Comprador:
-                <input placeholder="Digite seu nome..." />
+                <CaptionContainer>
+                    <CaptionItem>
+                        <CaptionCircle />
+                        Selecionado
+                    </CaptionItem>
+                    <CaptionItem>
+                        <CaptionCircle />
+                        Disponível
+                    </CaptionItem>
+                    <CaptionItem>
+                        <CaptionCircle />
+                        Indisponível
+                    </CaptionItem>
+                </CaptionContainer>
 
-                CPF do Comprador:
-                <input placeholder="Digite seu CPF..." />
+                <FormContainer>
+                    Nome do Comprador:
+                    <input placeholder="Digite seu nome..." data-test="client-name"/>
 
-                <button>Reservar Assento(s)</button>
-            </FormContainer>
+                    CPF do Comprador:
+                    <input placeholder="Digite seu CPF..." data-test="client-cpf"/>
 
-            <FooterContainer>
-                <div>
-                    <img src={"https://br.web.img2.acsta.net/pictures/22/05/16/17/59/5165498.jpg"} alt="poster" />
-                </div>
-                <div>
-                    <p>Tudo em todo lugar ao mesmo tempo</p>
-                    <p>Sexta - 14h00</p>
-                </div>
-            </FooterContainer>
+                    <Link to={`/sucesso`}>
+                        <button data-test="book-seat-btn">Reservar Assento(s)</button>
+                    </Link>
+                </FormContainer>
 
-        </PageContainer>
-    )
+                <FooterContainer>
+                    <div>
+                        <img src={"https://br.web.img2.acsta.net/pictures/22/05/16/17/59/5165498.jpg"} alt="poster" />
+                    </div>
+                    <div>
+                        <p>Tudo em todo lugar ao mesmo tempo</p>
+                        <p>Sexta - 14h00</p>
+                    </div>
+                </FooterContainer>
+
+            </PageContainer>
+        )
+    }
 }
 
 const PageContainer = styled.div`
