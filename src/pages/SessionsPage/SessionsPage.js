@@ -5,7 +5,7 @@ import { Link, useParams } from "react-router-dom"
 
 export default function SessionsPage() {
     const {idFilme} = useParams() 
-    const [sessoes, setSessoes] = useState()
+    const [sessoes, setSessoes] = useState(false)
     const URL = `https://mock-api.driven.com.br/api/v8/cineflex/movies/${idFilme}/showtimes/`
 
     useEffect(() => {
