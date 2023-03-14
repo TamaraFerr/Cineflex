@@ -5,7 +5,7 @@ import { Link, useParams } from "react-router-dom"
 
 export default function SessionsPage() {
     const {idFilme} = useParams() 
-    const [sessoes, setSessoes] = useState(false)
+    const [sessoes, setSessoes] = useState()
     const URL = `https://mock-api.driven.com.br/api/v8/cineflex/movies/${idFilme}/showtimes/`
 
     useEffect(() => {
@@ -39,10 +39,10 @@ export default function SessionsPage() {
         
                 <FooterContainer data-test="footer">
                     <div>
-                        <img src={"https://br.web.img2.acsta.net/pictures/22/05/16/17/59/5165498.jpg"} alt="poster" />
+                        <img src={sessoes.posterURL} alt="poster" />
                     </div>
                     <div>
-                        <p>Tudo em todo lugar ao mesmo tempo</p>
+                        <p>{sessoes.title}</p>
                     </div>
                 </FooterContainer>   
             </PageContainer>

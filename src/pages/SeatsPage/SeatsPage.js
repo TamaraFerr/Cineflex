@@ -1,14 +1,12 @@
 import axios from "axios"
 import { useEffect, useState } from "react"
-import { Link, useParams } from "react-router-dom"
+import { useParams } from "react-router-dom"
 import styled from "styled-components"
 import SeatReservation from "../../components/SeatReservation"
-import Seat from "../../components/SeatReservation"
 
 export default function SeatsPage() {
     const {idSessao} = useParams()
     const [sessao, setSessao] = useState()
-
     const URL = `https://mock-api.driven.com.br/api/v8/cineflex/showtimes/${idSessao}/seats`
 
     useEffect(() => {
@@ -51,17 +49,15 @@ export default function SeatsPage() {
                     </CaptionItem>
                 </CaptionContainer>
 
-                <FormContainer>
-                    <SeatReservation />
-                </FormContainer>
+                <SeatReservation />
 
-                <FooterContainer>
+                <FooterContainer data-test="footer">
                     <div>
-                        <img src={"https://br.web.img2.acsta.net/pictures/22/05/16/17/59/5165498.jpg"} alt="poster" />
+                        <img src={sessao.movie.posterURL} alt={sessao.movie.overview} />
                     </div>
                     <div>
-                        <p>Tudo em todo lugar ao mesmo tempo</p>
-                        <p>Sexta - 14h00</p>
+                        <p>{sessao.movie.title}</p>
+                        <p>{`${sessao.day.weekday} - ${sessao.name}`}</p>
                     </div>
                 </FooterContainer>
 
@@ -91,20 +87,7 @@ const SeatsContainer = styled.div`
     justify-content: center;
     margin-top: 20px;
 `
-const FormContainer = styled.div`
-    width: calc(100vw - 40px); 
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    margin: 20px 0;
-    font-size: 18px;
-    button {
-        align-self: center;
-    }
-    input {
-        width: calc(100vw - 60px);
-    }
-`
+
 const CaptionContainer = styled.div`
     display: flex;
     flex-direction: row;
